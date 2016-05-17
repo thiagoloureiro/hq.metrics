@@ -46,16 +46,10 @@ namespace hq.metrics.Core
             _count.Set(0);
         }
 
-        public long Count
-        {
-            get { return _count.Get(); }
-        }
+        public long Count => _count.Get();
 
         [IgnoreDataMember]
-        public IMetric Copy
-        {
-            get { return new CounterMetric(_count.Get()); }
-        }
+        public IMetric Copy => new CounterMetric(_count.Get());
 
         public void LogJson(StringBuilder sb)
         {
