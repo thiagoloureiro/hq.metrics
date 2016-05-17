@@ -1,0 +1,47 @@
+using System.IO;
+using System.Text;
+using hq.metrics.Stats;
+
+namespace hq.metrics.Reporting
+{
+    /// <summary>
+    /// A file-based reporter that produces a timestamped-suffixed output file for each sample collection
+    /// </summary>
+    public class SampledFileReporter : ReporterBase
+    {
+        private readonly Encoding _encoding;
+        private readonly IDateTimeOffsetProvider _dateTimeOffsetProvider;
+        private readonly string _directory;
+
+        public SampledFileReporter(Metrics metrics, IDateTimeOffsetProvider dateTimeOffsetProvider = null) : this("", Encoding.UTF8, new HumanReadableReportFormatter(metrics), dateTimeOffsetProvider) { }
+        public SampledFileReporter(Encoding encoding, Metrics metrics, IDateTimeOffsetProvider dateTimeOffsetProvider = null) : this("", encoding, new HumanReadableReportFormatter(metrics), dateTimeOffsetProvider) { }
+        public SampledFileReporter(IReportFormatter formatter, IDateTimeOffsetProvider dateTimeOffsetProvider = null) : this("", Encoding.UTF8, formatter, dateTimeOffsetProvider) { }
+        public SampledFileReporter(string directory, Metrics metrics, IDateTimeOffsetProvider dateTimeOffsetProvider = null) : this(directory, Encoding.UTF8, new HumanReadableReportFormatter(metrics), dateTimeOffsetProvider) { }
+        public SampledFileReporter(string directory, Encoding encoding, Metrics metrics, IDateTimeOffsetProvider dateTimeOffsetProvider = null) : this(directory, encoding, new HumanReadableReportFormatter(metrics), dateTimeOffsetProvider) { }
+        public SampledFileReporter(string directory, IReportFormatter formatter, IDateTimeOffsetProvider dateTimeOffsetProvider = null) : this(directory, Encoding.UTF8, formatter, dateTimeOffsetProvider) { }
+
+        public SampledFileReporter(string directory, Encoding encoding, IReportFormatter formatter, IDateTimeOffsetProvider dateTimeOffsetProvider) : base (null, formatter) 
+        {
+            _directory = directory;
+            _encoding = encoding;
+            _dateTimeOffsetProvider = dateTimeOffsetProvider;
+        }
+
+        public override void Run()
+        {
+            using (var fs = new FileStream(GenerateFilePath(), FileMode.CreateNew))
+            {
+                using (Out = new StreamWriter(fs, _encoding))
+                {
+                    Out.Write(Formatter.GetSample());
+                    Out.Flush();
+                }
+            }
+        }
+
+        private string GenerateFilePath()
+        {
+            return Path.Combine(_directory, $"{_dateTimeOffsetProvider.UtcNow.Ticks}.sample");
+        }
+    }
+}
