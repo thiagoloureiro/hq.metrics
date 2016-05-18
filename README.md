@@ -59,6 +59,21 @@ Metrics comes with five types of metrics:
   order to calculate percentiles and such are biased towards more recent data,
   since you probably care more about how your application is doing *now* as
   opposed to how it's done historically.)
+
+Metrics also has support for health checks:
+```csharp
+HealthChecks.Register("database", () =>
+{
+    if (Database.IsConnected)
+    {
+        return HealthCheck.Healthy;
+    }
+    else
+    {
+        return HealthCheck.Unhealthy("Not connected to database");
+    }
+});
+```
   
 **Third**, start collecting your metrics.
 

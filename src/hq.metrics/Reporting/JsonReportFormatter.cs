@@ -1,19 +1,26 @@
+using System;
+using System.Collections.Generic;
+using hq.metrics.Core;
 using hq.metrics.Util;
 
 namespace hq.metrics.Reporting
 {
     public class JsonReportFormatter : IReportFormatter
     {
-        private readonly Metrics _metrics;
+        private readonly Func<IDictionary<MetricName, IMetric>> _producer;
 
-        public JsonReportFormatter(Metrics metrics)
+        public JsonReportFormatter(Metrics metrics) : this(() => metrics.AllSorted) { }
+        
+        public JsonReportFormatter(HealthChecks healthChecks) : this(healthChecks.RunHealthChecks) { }
+
+        public JsonReportFormatter(Func<IDictionary<MetricName, IMetric>> producer)
         {
-            _metrics = metrics;
+            _producer = producer;
         }
 
         public string GetSample()
         {
-            return Serializer.Serialize(_metrics.AllSorted);
+            return Serializer.Serialize(_producer());
         }
     }
 }

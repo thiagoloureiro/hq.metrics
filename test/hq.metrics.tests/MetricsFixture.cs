@@ -7,13 +7,16 @@ namespace hq.metrics.tests
         public MetricsFixture()
         {
             M = new Metrics();
+            H = new HealthChecks();
         }
 
         public void Dispose()
         {
             M.Dispose();
+            H.Dispose();
         }
 
         public Metrics M { get; }
+        public HealthChecks H { get; }
     }
 }

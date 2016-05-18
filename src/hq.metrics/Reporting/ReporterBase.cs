@@ -2,7 +2,6 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using metrics.Reporting;
 
 namespace hq.metrics.Reporting
 {
@@ -15,6 +14,11 @@ namespace hq.metrics.Reporting
         protected TextWriter Out;
         protected readonly IReportFormatter Formatter;
         private long Runs { get; set; }
+
+        protected ReporterBase(TextWriter writer, HealthChecks healthChecks) : this(writer, new HumanReadableReportFormatter(healthChecks))
+        {
+            Out = writer;
+        }
 
         protected ReporterBase(TextWriter writer, Metrics metrics) : this(writer, new HumanReadableReportFormatter(metrics))
         {

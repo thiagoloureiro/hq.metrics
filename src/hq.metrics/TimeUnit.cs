@@ -23,7 +23,7 @@ namespace hq.metrics
     /// </summary>
     public static class TimeUnitExtensions
     {
-		private static readonly long[][] _conversionMatrix = BuildConversionMatrix();
+		private static readonly long[][] ConversionMatrix = BuildConversionMatrix();
 
 		private static long[][] BuildConversionMatrix()
 		{
@@ -64,8 +64,8 @@ namespace hq.metrics
 			var targetIndex = (int)target;
 
 			var result = (sourceIndex > targetIndex) ?
-				duration * _conversionMatrix[sourceIndex][targetIndex]:
-				duration / _conversionMatrix[targetIndex][sourceIndex];
+				duration * ConversionMatrix[sourceIndex][targetIndex]:
+				duration / ConversionMatrix[targetIndex][sourceIndex];
 
 		    return result;
 		}

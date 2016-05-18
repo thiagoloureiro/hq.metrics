@@ -1,9 +1,8 @@
 ﻿using System;
-using hq.metrics;
 
-namespace metrics.Reporting
+namespace hq.metrics.Reporting
 {
-    interface IReporter : IDisposable
+    internal interface IReporter : IDisposable
     {
         void Run();
         void Start(long period, TimeUnit unit);

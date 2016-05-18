@@ -1,18 +1,22 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using hq.metrics.Core;
 using hq.metrics.Util;
-using metrics.Reporting;
 
 namespace hq.metrics.Reporting
 {
     public class HumanReadableReportFormatter : IReportFormatter
     {
-        private readonly Metrics _metrics;
+        private readonly Func<IDictionary<MetricName, IMetric>> _producer;
 
-        public HumanReadableReportFormatter(Metrics metrics)
+        public HumanReadableReportFormatter(Metrics metrics) : this(() => metrics.AllSorted) { }
+
+        public HumanReadableReportFormatter(HealthChecks healthChecks) : this(healthChecks.RunHealthChecks) { }
+
+        public HumanReadableReportFormatter(Func<IDictionary<MetricName, IMetric>> producer)
         {
-            _metrics = metrics;
+            _producer = producer;
         }
 
         public string GetSample()
@@ -22,13 +26,13 @@ namespace hq.metrics.Reporting
             var dateTime = string.Format("{0} {1}", now.ToString("d"), now.ToString("t"));
             sb.Append(dateTime);
             sb.Append(' ');
-            for (var i = 0; i < (80 - dateTime.Length - 1); i++)
+            for (var i = 0; i < 80 - dateTime.Length - 1; i++)
             {
                 sb.Append('=');
             }
             sb.AppendLine();
 
-            foreach (var entry in Utils.SortMetrics(_metrics.All))
+            foreach (var entry in Utils.SortMetrics(_producer()))
             {
                 sb.Append(entry.Key);
                 sb.AppendLine(":");
