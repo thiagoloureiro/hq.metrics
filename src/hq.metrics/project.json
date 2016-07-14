@@ -6,7 +6,7 @@
   "copyright": "2016 hq.io",
 
   "packOptions": {
-    "tags": [ "compiler", "roslyn" ],
+    "tags": [ "runtime", "metrics", "hq.io" ],
     "owners": [ "hq.io" ],
     "summary": "Metrics is a lightweight library for instrumenting applications at runtime in .NET Core",
     "projectUrl": "https://github.com/hq-io/metrics",
