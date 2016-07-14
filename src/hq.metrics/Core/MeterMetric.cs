@@ -29,7 +29,7 @@ namespace hq.metrics.Core
         {
             var meter = new MeterMetric(eventType, rateUnit, dateTimeOffsetProvider);
 
-            Task.Factory.StartNew(async () =>
+            Task.Run(async () =>
             {
                 while (!meter._token.IsCancellationRequested)
                 {

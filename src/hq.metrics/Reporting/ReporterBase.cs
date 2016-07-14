@@ -11,8 +11,10 @@ namespace hq.metrics.Reporting
     public abstract class ReporterBase : IReporter
     {
         private CancellationTokenSource _token;
+
         protected TextWriter Out;
         protected readonly IReportFormatter Formatter;
+
         private long Runs { get; set; }
 
         protected ReporterBase(TextWriter writer, HealthChecks healthChecks) : this(writer, new HumanReadableReportFormatter(healthChecks))
@@ -42,7 +44,7 @@ namespace hq.metrics.Reporting
             var interval = TimeSpan.FromSeconds(seconds);
 
             _token = new CancellationTokenSource();
-            Task.Factory.StartNew(async () =>
+            Task.Run(async () =>
             {
                 OnStarted();
                 while (!_token.IsCancellationRequested)

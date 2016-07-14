@@ -45,12 +45,22 @@ namespace hq.metrics.Core
 		/// <summary>
 		/// Creates a new <see cref="HistogramMetric" /> with the given sample type
 		/// </summary>
-		public HistogramMetric(SampleType type) : this(type.NewSample())
-		{
-		   
-		}
+		public HistogramMetric(SampleType type) : this(NewSample(type)) { }
 
-		/// <summary>
+	    private static ISample NewSample(SampleType type)
+	    {
+            switch (type)
+            {
+                case SampleType.Uniform:
+                    return new UniformSample(1028);
+                case SampleType.Biased:
+                    return new ExponentiallyDecayingSample(1028, 0.015);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type));
+            }
+        }
+
+	    /// <summary>
 		/// Creates a new <see cref="HistogramMetric" /> with the given sample
 		/// </summary>
 		public HistogramMetric(ISample sample) : this(sample, true)
@@ -106,47 +116,29 @@ namespace hq.metrics.Core
 		/// <summary>
 		/// Returns the number of values recorded
 		/// </summary>
-		public long Count { get { return _count.Get(); }}
+		public long Count => _count.Get();
 
-		/// <summary>
+	    /// <summary>
 		/// Returns the largest recorded value
 		/// </summary>
-		public double Max
-		{
-			get
-			{
-				return Count > 0 ? _max.Get() : 0.0;
-			}
-		}
-		
-		/// <summary>
+		public double Max => Count > 0 ? _max.Get() : 0.0;
+
+	    /// <summary>
 		/// Returns the smallest recorded value
 		/// </summary>
-		public double Min
-		{
-			get
-			{
-				return Count > 0 ? _min.Get() : 0.0;
-			}
-		}
-		
-		/// <summary>
+		public double Min => Count > 0 ? _min.Get() : 0.0;
+
+	    /// <summary>
 		/// Returns the arithmetic mean of all recorded values
 		/// </summary>
-		public double Mean
-		{
-			get { return Count > 0 ? _sum.Get()/(double) Count : 0.0; }
-		}
-		
-		/// <summary>
+		public double Mean => Count > 0 ? _sum.Get()/(double) Count : 0.0;
+
+	    /// <summary>
 		/// Returns the standard deviation of all recorded values
 		/// </summary>
-		public double StdDev
-		{
-			get { return Count > 0 ? Math.Sqrt(Variance) : 0.0; }
-		}
+		public double StdDev => Count > 0 ? Math.Sqrt(Variance) : 0.0;
 
-		/// <summary>
+	    /// <summary>
 		/// Returns an array of values at the given percentiles
 		/// </summary>
 		public double[] Percentiles(params double[] percentiles)
@@ -188,17 +180,11 @@ namespace hq.metrics.Core
 		/// <summary>
 		/// Returns a list of all values in the histogram's sample
 		/// </summary>
-		public ICollection<long> Values
-		{
-			get { return _sample.Values; }
-		}
+		public ICollection<long> Values => _sample.Values;
 
-		private double Variance
-		{
-			get { return Count <= 1 ? 0.0 : BitConverter.Int64BitsToDouble(_varianceS.Get())/(Count - 1); }
-		}
+	    private double Variance => Count <= 1 ? 0.0 : BitConverter.Int64BitsToDouble(_varianceS.Get())/(Count - 1);
 
-		private void SetMax(long potentialMax)
+	    private void SetMax(long potentialMax)
 		{
 			var done = false;
 			while (!done)
@@ -259,69 +245,20 @@ namespace hq.metrics.Core
 
 	    public void LogJson(StringBuilder sb)
 	    {
-            
-
             sb.Append("{\"count\":").Append(Count)
                 .Append(",\"max\":").Append(Max)
                 .Append(",\"min\":").Append(Min)
                 .Append(",\"mean\":").Append(Mean)
                 .Append(",\"stdev\":").Append(StdDev)
                 .Append(",\"variance\":").Append(Variance).Append("}");
-              
-
         }
-        public void LogJson(StringBuilder sb, double[] perc)
-        {
-	        var percSb= new StringBuilder();
-            foreach (var percentile in Percentiles(perc))
-	        {
-	            percSb.Append(" ").Append(percentile);
-	        }
-	       
-            sb.Append("{\"count\":").Append(Count)
-                .Append(",\"max\":").Append(Max)
-                .Append(",\"min\":").Append(Min)
-                .Append(",\"mean\":").Append(Mean)
-                .Append(",\"stdev\":").Append(StdDev)
-                //  .Append(",\"variance\":").Append(Variance).Append("}");
-                .Append(",\"percentiles\":").Append(percSb).Append("}"); 
-     
-	    }
+        
+	    public double SampleMean => _sample.Count == 0 ? 0 : _sample.Values.Average();
 
-	    public double SampleMean
-	    {
-	        get { return _sample.Count == 0 ? 0 : _sample.Values.Average(); }
-	    }
+	    public int SampleCount => _sample.Count;
 
-	    public int SampleCount
-	    {
-            get { return _sample.Count; }
-	    }
+	    public long SampleMin => _sample.Count == 0 ? 0 : _sample.Values.Min();
 
-	    public long SampleMin
-	    {
-            get { return _sample.Count == 0 ? 0 : _sample.Values.Min(); }
-	    }
-
-	    public double SampleMax
-	    {
-            get { return _sample.Count == 0 ? 0 : _sample.Values.Max(); }
-	    }
-	}
-
-    public static class SampleExtensions
-	{
-		public static ISample NewSample(this HistogramMetric.SampleType type)
-		{
-			switch (type)
-			{
-				case HistogramMetric.SampleType.Uniform:
-					return new UniformSample(1028);
-				case HistogramMetric.SampleType.Biased:
-					return new ExponentiallyDecayingSample(1028, 0.015);
-				default:
-					throw new ArgumentOutOfRangeException("type");
-			}
-		}
+	    public double SampleMax => _sample.Count == 0 ? 0 : _sample.Values.Max();
 	}
 }

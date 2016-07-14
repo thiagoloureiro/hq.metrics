@@ -38,7 +38,7 @@ namespace hq.metrics.Support
             return left.Get();
         }
 
-        private VolatileLong(VolatileLong value): this()
+        public VolatileLong(long value): this()
         {
             Set(value);
         }
