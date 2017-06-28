@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Metrics is a lightweight library for instrumenting applications at runtime in .NET Core</Description>
+    <Copyright>2017 HQ.io</Copyright>
+    <AssemblyTitle>hq.metrics</AssemblyTitle>
+    <Authors>HQ.io</Authors>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <AssemblyName>hq.metrics</AssemblyName>
+    <PackageId>hq.metrics</PackageId>
+    <PackageTags>runtime;metrics;hq.io</PackageTags>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/hq-io/metrics</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/hq-io/metrics/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <Version>1.1.0-pre</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.1.1" />
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.2.0" />
+    <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
+  </ItemGroup>
+
+</Project>

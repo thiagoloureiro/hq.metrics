@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Xunit;
-using hq.metrics;
 using hq.metrics.Core;
 
 namespace hq.metrics.tests.Core
