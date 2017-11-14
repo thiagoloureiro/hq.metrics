@@ -1,3 +1,5 @@
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhq-io%2Fmetrics.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhq-io%2Fmetrics?ref=badge_shield)
+
 HQ.io Metrics
 =============
 
@@ -90,3 +92,7 @@ License
 The original Metrics project is Copyright 2010-2012 Coda Hale and Yammer, Inc.
 
 Both works are published under an Apache 2.0 License, see LICENSE and https://github.com/dropwizard/metrics/blob/3.1-maintenance/LICENSE
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhq-io%2Fmetrics.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhq-io%2Fmetrics?ref=badge_large)
